@@ -1,0 +1,21 @@
+﻿
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration configuration
+
+@page "/api"
+
+<p>Url:@(configuration.GetValue<string>("webapi"))</p>
+
+<div>reply :@reply</div>
+
+@code{
+
+    private string reply;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var client = new HttpClient();
+        client.BaseAddress = new Uri(configuration.GetValue<string>("webapi"));
+        reply = await client.GetStringAsync("/WeatherForecast");
+    }
+}

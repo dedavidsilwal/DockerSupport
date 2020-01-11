@@ -1,0 +1,53 @@
+﻿
+@using Grpc.Net.Client;
+@using GrpcService1;
+@using Microsoft.Extensions.Configuration;
+@inject ApplicationDbContext context
+@inject IConfiguration configuration
+
+@page "/"
+<div>
+    <p>Message :@Message</p>
+
+</div>
+
+<p>Grpc Url:@(configuration.GetValue<string>("Grpc"))</p>
+
+<div>
+   <p>Is Available</p> @IsDbLive()
+</div>
+
+@code
+{
+
+    public string Message;
+
+    async Task<bool> IsDbLive(){
+          return await context.Database.CanConnectAsync();    
+    }
+
+        protected override async  Task OnInitializedAsync()
+        {
+          try
+        {
+            AppContext.SetSwitch(
+                "System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport",
+                true);
+
+            var conf = configuration.GetValue<string>("Grpc");
+
+            var ch = new Greeter.GreeterClient(GrpcChannel.ForAddress(conf));
+            var reply = await ch.SayHelloAsync(
+                                  new HelloRequest { Name = "GreeterClient" });
+
+            Message = reply.Message;
+
+               await base. OnInitializedAsync();
+        }
+        catch (Exception ex)
+        {
+            Message = ex.Message;
+        }
+      }
+
+  }

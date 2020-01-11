@@ -1,0 +1,47 @@
+version: '3.4'
+
+services:
+  dockersupport:
+    image: dockersupport
+    build:
+      context: .
+      dockerfile: DockerSupport/Dockerfile
+    environment:
+    - Grpc=https://grpcservice1:5004
+    - DefaultConnection=Server=mariadb://db:3306;User Id=root;Password=toor;Database=mariadbtest
+    - webapi=http://webapi
+    ports:
+    - 8080:80
+    depends_on:
+    - grpcservice1
+    - db
+    - webapi
+
+  grpcservice1:
+    image: grpcservice1
+    build:
+      context: .
+      dockerfile: GrpcService1/Dockerfile
+    expose:
+    - 5003
+    ports:
+    - 5004:443
+    
+
+  db:
+    image: mariadb
+    ports:
+      - 3306:3306
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: toor
+      MYSQL_DATABASE: mariadbtest
+      MYSQL_USER: root
+      MYSQL_PASSWORD: toor
+
+
+  webapi:
+    image: webapi
+    build:
+      context: .
+      dockerfile: WebAPI/Dockerfile
