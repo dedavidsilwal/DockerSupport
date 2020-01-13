@@ -1,6 +1,15 @@
 version: '3.4'
 
 services:
+
+    nginx:
+    image: nginx
+    build:
+      context: .
+      dockerfile: Nginx/Dockerfile
+    link:
+    - dockersupport
+
   dockersupport:
     image: dockersupport
     build:
@@ -9,13 +18,15 @@ services:
     environment:
     - Grpc=https://grpcservice1:5004
     - DefaultConnection=Server=mariadb://db:3306;User Id=root;Password=toor;Database=mariadbtest
-    - webapi=http://webapi
+    - webapi=http://webapi    
     ports:
     - 8080:80
     depends_on:
     - grpcservice1
     - db
     - webapi
+
+        
 
   grpcservice1:
     image: grpcservice1
