@@ -8,24 +8,13 @@
 @page "/"
 <div>
     <p>Message :@Message</p>
-
 </div>
 
-<p>Grpc Url:@(configuration.GetValue<string>("Grpc"))</p>
-
-<div>
-   <p>Is Available</p> @IsDbLive()
-</div>
 
 @code
 {
-
     public string Message;
-
-    async Task<bool> IsDbLive(){
-          return await context.Database.CanConnectAsync();    
-    }
-
+       
         protected override async  Task OnInitializedAsync()
         {
           try
@@ -42,7 +31,6 @@
 
             Message = reply.Message;
 
-               await base. OnInitializedAsync();
         }
         catch (Exception ex)
         {

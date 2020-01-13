@@ -31,15 +31,15 @@ namespace DockerSupport
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
-     
-            services.AddLetsEncrypt();
+
+            //  services.AddLetsEncrypt();
 
             services.AddDbContext<ApplicationDbContext>(options => options.UseMySql(Configuration.GetValue<string>("DefaultConnection")));
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,ApplicationDbContext context)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ApplicationDbContext context)
         {
             if (env.IsDevelopment())
             {
@@ -55,7 +55,7 @@ namespace DockerSupport
             //app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-       //     context.Database.Migrate();
+            context.Database.Migrate();
             app.UseRouting();
 
 

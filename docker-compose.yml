@@ -1,17 +1,38 @@
 version: '3.4'
 
 services:
+
+#  haproxy:
+#    image: tutum/haproxy
+
+
+ # reverseproxy:
+ #   build:
+ #     context: .
+ #     dockerfile: Nginx/Dockerfile
+ #   depends_on:
+ #    - dockersupport   
+ #   ports:
+ #     - 8080:8080
+ #    # - "443:443"
+ #   restart: always
+
   dockersupport:
     image: dockersupport
     build:
       context: .
       dockerfile: DockerSupport/Dockerfile
     environment:
-    - Grpc=https://grpcservice1:5004
-    - DefaultConnection=Server=mariadb://db:3306;User Id=root;Password=toor;Database=mariadbtest
+    - Grpc=http://grpcservice1
+    - DefaultConnection=Server=db;User Id=root;Password=toor;Database=mariadbtest
     - webapi=http://webapi
+    expose:
+      - 80
     ports:
-    - 8080:80
+     - 80:80
+    restart: always
+## ports:
+##  - 8080:80
     depends_on:
     - grpcservice1
     - db
@@ -21,12 +42,7 @@ services:
     image: grpcservice1
     build:
       context: .
-      dockerfile: GrpcService1/Dockerfile
-    expose:
-    - 5003
-    ports:
-    - 5004:443
-    
+      dockerfile: GrpcService1/Dockerfile    
 
   db:
     image: mariadb
@@ -45,3 +61,33 @@ services:
     build:
       context: .
       dockerfile: WebAPI/Dockerfile
+  
+##  rabbitmq:
+##    image:rabbitmq
+##    container_name: rabbitmq
+
+ ##  redis:
+ ##    image:redis
+ ##    container_name: redis
+ ##
+#  elasticsearch:
+#     image: docker.elastic.co/elasticsearch/elasticsearch:7.5.1
+#     container_name: elasticsearch
+#     ports:
+#      - 9200:9200
+ ##    volumes:
+   ##   - elasticsearch-data:/usr/share/elasticsearch/data
+
+ # kibana:
+ #   image: docker.elastic.co/kibana/kibana:7.5.1
+ #   container_name: kibana
+ #   ports:
+ #   - 5601:5601
+ #   depends_on:
+ #   - elasticsearch
+
+
+
+    
+
+
