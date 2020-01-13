@@ -1,8 +1,7 @@
 version: '3.4'
 
 services:
-
-    nginx:
+  nginx:
     image: nginx
     build:
       context: .
@@ -19,8 +18,8 @@ services:
     - Grpc=https://grpcservice1:5004
     - DefaultConnection=Server=mariadb://db:3306;User Id=root;Password=toor;Database=mariadbtest
     - webapi=http://webapi    
-    ports:
-    - 8080:80
+    expose:
+    - 80
     depends_on:
     - grpcservice1
     - db
@@ -38,7 +37,6 @@ services:
     ports:
     - 5004:443
     
-
   db:
     image: mariadb
     ports:
