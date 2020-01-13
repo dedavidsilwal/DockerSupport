@@ -25,9 +25,7 @@ services:
     depends_on:
     - grpcservice1
     - db
-    - webapi
-
-        
+    - webapi           
 
   grpcservice1:
     image: grpcservice1
