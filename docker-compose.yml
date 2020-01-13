@@ -6,16 +6,16 @@ services:
 #    image: tutum/haproxy
 
 
- # reverseproxy:
- #   build:
- #     context: .
- #     dockerfile: Nginx/Dockerfile
- #   depends_on:
- #    - dockersupport   
- #   ports:
- #     - 8080:8080
- #    # - "443:443"
- #   restart: always
+  reverseproxy:
+    build:
+      context: .
+      dockerfile: Nginx/Dockerfile
+    depends_on:
+     - dockersupport   
+    ports:
+      - 80:80
+     # - "443:443"
+    restart: always
 
   dockersupport:
     image: dockersupport
@@ -27,9 +27,9 @@ services:
     - DefaultConnection=Server=db;User Id=root;Password=toor;Database=mariadbtest
     - webapi=http://webapi
     expose:
-      - 80
+    - 80
     ports:
-     - 80:80
+     - 5000:80
     restart: always
 ## ports:
 ##  - 8080:80
@@ -37,6 +37,16 @@ services:
     - grpcservice1
     - db
     - webapi
+
+  healthchceks:
+   image: healthchceks
+   build: 
+    context: .
+    dockerfile: healthchceks/Dockerfile
+  expose:
+  - 5004
+  restart:always
+
 
   grpcservice1:
     image: grpcservice1
