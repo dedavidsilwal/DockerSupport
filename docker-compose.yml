@@ -2,20 +2,15 @@ version: '3.4'
 
 services:
 
-#  haproxy:
-#    image: tutum/haproxy
-
-
   reverseproxy:
-    build:
-      context: .
-      dockerfile: Nginx/Dockerfile
-    depends_on:
-     - dockersupport   
-    ports:
-      - 80:80
-     # - "443:443"
-    restart: always
+   image: reverseproxy
+   build:
+     context: .
+     dockerfile: Nginx.Dockerfile
+   ports:
+    - 8080:80
+   depends_on:
+     - dockersupport    
 
   dockersupport:
     image: dockersupport
@@ -24,29 +19,23 @@ services:
       dockerfile: DockerSupport/Dockerfile
     environment:
     - Grpc=http://grpcservice1
-    - DefaultConnection=Server=db;User Id=root;Password=toor;Database=mariadbtest
+   ## - DefaultConnection=Server=db;User Id=root;Password=toor;Database=mariadbtest
     - webapi=http://webapi
-    expose:
-    - 80
-    ports:
-     - 5000:80
+
     restart: always
-## ports:
-##  - 8080:80
     depends_on:
     - grpcservice1
-    - db
+   # - db
     - webapi
 
-  healthchceks:
-   image: healthchceks
-   build: 
-    context: .
-    dockerfile: healthchceks/Dockerfile
-  expose:
-  - 5004
-  restart:always
-
+#  healthchceks:
+#   image: healthchceks
+#   build: 
+#    context: .
+#    dockerfile: healthchceks/Dockerfile
+#  expose:
+#  - 5004
+#  restart:always
 
   grpcservice1:
     image: grpcservice1
@@ -54,16 +43,16 @@ services:
       context: .
       dockerfile: GrpcService1/Dockerfile    
 
-  db:
-    image: mariadb
-    ports:
-      - 3306:3306
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: toor
-      MYSQL_DATABASE: mariadbtest
-      MYSQL_USER: root
-      MYSQL_PASSWORD: toor
+ # db:
+ #   image: mariadb
+ #   ports:
+ #     - 3306:3306
+ #   restart: always
+ #   environment:
+ #     MYSQL_ROOT_PASSWORD: toor
+ #     MYSQL_DATABASE: mariadbtest
+ #     MYSQL_USER: root
+ #     MYSQL_PASSWORD: toor
 
 
   webapi:
